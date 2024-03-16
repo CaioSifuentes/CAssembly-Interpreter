@@ -1,5 +1,6 @@
-# Object file
-*.o
+# VS Code
+.vscode
 
-# Ada Library Information
-*.ali
+# Compilador C
+main.exe
+tempCodeRunnerFile.c
