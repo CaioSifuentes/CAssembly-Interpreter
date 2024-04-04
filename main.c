@@ -2,6 +2,22 @@
 #include <stdio.h>
 #include "cpu.h"
 
+void lerArquivo(const char *Arquivo){
+    char i = 0;
+    FILE *arquivo;
+    arquivo = fopen(Arquivo, "r");
+    if(arquivo == NULL){
+        perror("Nao foi possivel abrir o arquivo");
+        return;
+    }
+    char buffer[256];
+    while(fgets(buffer,sizeof(buffer), arquivo)){
+        buffer[strcspn(buffer, "\n")] = 0;
+        //insere(buffer);
+    }
+    fclose(arquivo);
+}
+
 void printBinario(int num) { 
     printf("0b");
     for(int i = sizeof(int) * 8 - 1; i >= 0; i--) {
