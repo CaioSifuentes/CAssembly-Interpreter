@@ -11,13 +11,31 @@ void printBinario(int num) {
     printf("\n");
 }
 
+void showDashboard() {
+    printf("===============================================================\n");
+    printf("Valor de mbr: %u\n", mbr);
+    printf("Valor de ir: %d\n", ir);
+    printf("Valor de mar: %u\n", mar);
+    printf("Valor de ro0: %d\n", ro0);
+    printf("Valor de ro1: %d\n", ro1);
+    printf("Valor de ro2: %d\n", ro2);
+    
+    printf("Valores dos registradores:\n");
+    for (int i = 0; i < 16; i++) {
+        printf("reg[%d]: %u | ", i, reg[i]);
+    }
+
+    printf("\nValor de imm: %u\n", imm);
+    printf("Valor de pc: %u\n", pc);
+    printf("Valor de e: %d\n", e);
+    printf("Valor de l: %d\n", l);
+    printf("Valor de g: %d\n", g);
+}
+
 void Busca(void) 
 {
-    mbr = 0;
-    for (int i = 0; i < 4; i++){
-        mbr = mbr << 8;
-        mbr = mbr | memoria[(pc*4) + i];
-    }
+    mbr = 0; mar = pc;
+    for (int i = 0; i < 4; i++) mbr = (mbr << 8) | memoria[mar + i];
 }
 
 void Decodifica(void) 
@@ -78,20 +96,30 @@ void Executa (void)
     }
     else if (ir == 1) // NO OPERATION
     {
-        pc++;
+        pc = pc + 4;
+    }
+    else if (ir == 2) // LOGICAL-NOT ON REGISTER
+    {
+        if (reg[ro0] >= 1){
+            reg[ro0] = 0;
+        }
+        else {
+            reg[ro0] = 1;
+        }
     }
 }
 
 int main(void)
 { 
-    Busca();
-    printBinario(mbr);
-    Decodifica();
-    Executa();
-    printBinario(ir);
-    printBinario(ro0);
-    printBinario(ro1);
-    printBinario(ro2);
-    printf("\n%d", ir);
+    while (1){
+        showDashboard();
+        Busca();
+        Decodifica();
+        Executa();
+
+        printf("Pressione Enter para continuar...");
+        fflush(stdout);
+        while (getchar() != '\n'); 
+    }
     return 0;
 }
