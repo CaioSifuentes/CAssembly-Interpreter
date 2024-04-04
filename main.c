@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "cpu.h"
 
 void lerArquivo(const char *Arquivo){
@@ -29,7 +30,7 @@ void printBinario(int num) {
 
 void showDashboard() {
     printf("===============================================================\n");
-    printf("Valor de mbr: %u\n", mbr);
+    printf("Valor de mbr: "); printBinario(mbr);
     printf("Valor de ir: %d\n", ir);
     printf("Valor de mar: %u\n", mar);
     printf("Valor de ro0: %d\n", ro0);
@@ -84,8 +85,8 @@ void Decodifica(void)
         ro1 = mbr >> 19;
         ro1 = ro1 & 0b1111;
 
-        ro1 = mbr >> 15;
-        ro1 = ro1 & 0b1111;
+        ro2 = mbr >> 15;
+        ro2 = ro2 & 0b1111;
     }
     else if (ir >= 14 && ir <= 15){
         ro0 = mbr >> 23;
@@ -116,19 +117,45 @@ void Executa (void)
     }
     else if (ir == 2) // LOGICAL-NOT ON REGISTER
     {
-        if (reg[ro0] >= 1){
-            reg[ro0] = 0;
-        }
-        else {
-            reg[ro0] = 1;
-        }
+        reg[ro0] = !(reg[ro0]);
+    }
+    else if (ir == 4) // COMPARE REGISTER
+    {
+        if (reg[ro0] == reg[ro1]) e = 1;
+        else e = 0;
+
+        if (reg[ro0] < reg[ro1]) l = 1;
+        else l = 0;
+
+        if (reg[ro0] > reg[ro1]) g = 1;
+        else g = 0;
+    }
+    else if (ir == 6) // STORE VIA BASE+OFFSET
+    {
+        // Não sei fazer. ------------------------------------------------
+    }
+    else if (ir == 8) // SUBTRACT REGISTER
+    {
+        reg[ro0] = reg[ro1] - reg[ro2];
+    }
+    else if (ir == 10) // DIVIDE REGISTER
+    {
+        reg[ro0] = reg[ro1] / reg[ro2];
+    }
+    else if (ir == 12) // LOGICAL-OR ON REGISTER
+    {
+        reg[ro0] = reg[ro1] | reg[ro2];
     }
 }
 
 int main(void)
 { 
-    lerArquivo("./operação1.txt");
+    //lerArquivo("./operação1.txt");
     //lerArquivo("./operação2.txt");
+    reg[0] = 0;
+    reg[1] = 8;
+    reg[2] = 2;
+
     while (1){
         showDashboard();
         Busca();
