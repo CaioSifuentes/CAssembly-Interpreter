@@ -111,6 +111,8 @@ void Executa (void)
 
 int main(void)
 { 
+    lerArquivo("./operação1.txt");
+    //lerArquivo("./operação2.txt");
     while (1){
         showDashboard();
         Busca();
