@@ -1,4 +1,4 @@
-unsigned char memoria[154] = {0b10001000, 0b00000000, 0b000000000, 0b00001010, 0b00000000, 0b00000000, 0b000000000, 0b00001010}; // Memória RAM
+unsigned char memoria[154] = {0b10001000, 0b00000000, 0b000000000, 0b00001010, 0b00100000, 0b00000000, 0b000000000, 0b00001010}; // Memória RAM
 
 unsigned int mbr; // Barramento MBR
 
@@ -19,5 +19,6 @@ void Decodifica(void); // Decodifica uma instrução imposta no MBR.
 void Executa (void); // Executa a instrução em IR, conforme os dados necessários.
 
 void printBinario(int num); // DEBUG: Imprime uma variavel em seu valor binário.
+void showDashboard(); // Mostra na tela as variaveis de controle.
 
 void lerArquivo(const char *Arquivo); // Lê os arquivos e manda as instruções para a memoria

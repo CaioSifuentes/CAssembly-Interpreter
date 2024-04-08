@@ -3,6 +3,31 @@
 #include <string.h>
 #include "cpu.h"
 
+int main(void)
+{
+    //lerArquivo("./operação1.txt");
+    //lerArquivo("./operação2.txt");
+    reg[0] = 3;
+    reg[1] = 8;
+    reg[2] = 2;
+    int memoriaInteiro = 0;
+
+    while (1){
+        for (int i = 0; i < 4; i++) memoriaInteiro = (memoriaInteiro << 8) | memoria[4 + i];
+        // printf("%d", memoriaInteiro);
+        showDashboard();
+        Busca();
+        Decodifica();
+        Executa();
+
+        printf("Pressione Enter para continuar...");
+        fflush(stdout);
+        while (getchar() != '\n');
+
+    }
+    return 0;
+}
+
 void lerArquivo(const char *Arquivo){
     char i = 0;
     FILE *arquivo;
@@ -25,28 +50,24 @@ void printBinario(int num) {
         printf("%d", (num >> i) & 1);
         if (i % 8 == 0) printf(" ");
     }
-    printf("\n");
 }
 
 void showDashboard() {
-    printf("===============================================================\n");
-    printf("Valor de mbr: "); printBinario(mbr);
-    printf("Valor de ir: %d\n", ir);
-    printf("Valor de mar: %u\n", mar);
-    printf("Valor de ro0: %d\n", ro0);
-    printf("Valor de ro1: %d\n", ro1);
-    printf("Valor de ro2: %d\n", ro2);
-
-    printf("Valores dos registradores:\n");
+    system("cls");
+    printf("======================================================================\n");
+    printf("| MBR: "); printBinario(mbr); printf("|\n");
+    printf("| IR: %d | MAR: %u |\n", ir, mar);
+    printf("| Ro0: %d | Ro1: %d | Ro2: %d | IMM: %d |\n", ro0, ro1, ro2, imm);
+    printf("-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-\n");
+    printf("| Registradores:\n");
     for (int i = 0; i < 16; i++) {
-        printf("reg[%d]: %u | ", i, reg[i]);
+        printf("| Reg[%d]: %u | ", i, reg[i]);
+        if (i % 2 == 1) printf("\n");
     }
-
-    printf("\nValor de imm: %u\n", imm);
-    printf("Valor de pc: %u\n", pc);
-    printf("Valor de e: %d\n", e);
-    printf("Valor de l: %d\n", l);
-    printf("Valor de g: %d\n", g);
+    printf("-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-\n");
+    printf("| E: %d | L: %d | G: %d |\n", e, l, g);
+    printf("| PC: %u |\n", pc);
+    printf("======================================================================\n");
 }
 
 void Busca(void)
@@ -108,18 +129,13 @@ void Decodifica(void)
 
 void Executa (void)
 {
-    if (ir == 0) // HALT
-    {
-    }
-    else if (ir == 1) // NO OPERATION
-    {
-        pc = pc + 4;
-    }
+    if (ir == 1) // NO OPERATION
+    {}
     else if (ir == 2) // LOGICAL-NOT ON REGISTER
     {
         reg[ro0] = !(reg[ro0]);
     }
-     else if(ir == 3){ // MOVE REGISTER
+    else if(ir == 3){ // MOVE REGISTER
         reg[ro0] = reg[ro1];
     }
     else if (ir == 4) // COMPARE REGISTER
@@ -135,7 +151,6 @@ void Executa (void)
     }
     else if(ir == 5) // LOAD VIA BASE+OFFSET
      { 
-
         reg[ro0] = memoria[mar + reg[ro1]]; // Não sei se é assim, esse tava dificil kkkk------------------------------------------------
     }
     else if (ir == 6) // STORE VIA BASE+OFFSET
@@ -169,11 +184,13 @@ void Executa (void)
     }
     else if(ir == 14) // LOAD
     {
-        for (int i = 0; i < 4; i++) reg[ro0] = (reg[ro0] << 8) | memoria[mar + i];
+        for (int i = 0; i < 4; i++) 
+            reg[ro0] = (reg[ro0] << 8) | memoria[mar + i];
     }
     else if(ir == 15) // STORE
     {
-        for (int i = 0; i < 4; i++) memoria[mar + i] = (reg[ro0] << (24 - (8*i))) & 0b11111111; // EXPLICAR
+        for (int i = 0; i < 4; i++) 
+            memoria[mar + i] = (reg[ro0] << (24 - (8*i))) & 0b11111111; //------------------------------------------------------------//
     }
     else if(ir == 16) // MOVE IMMEDIATE TO THE LOWER HALF OF THE REGISTER
     {
@@ -181,7 +198,7 @@ void Executa (void)
     }
     else if(ir == 17) // MOVE IMMEDIATE TO THE HIGHER HALF OF THE REGISTER
     {
-        reg[ro0] = ((imm & 0b1111111111111111) << 16) | (reg[ro0] & 0b1111111111111111); // EXPLICAR
+        reg[ro0] = ((imm & 0b1111111111111111) << 16) | (reg[ro0] & 0b1111111111111111); //------------------------------------------------------------//
     }
     else if(ir == 18) // ADD IMMEDIATE
     {
@@ -209,50 +226,33 @@ void Executa (void)
     }
     else if(ir == 24) // JUMP IF EQUAL TO
     {
-
+        if(e == 1) pc = mar; //----------------------------------------------------------------------------//
     }
     else if(ir == 25) // JUMP IF NOT EQUAL TO
     {
-        if(e == 0){
-            pc = memoria[mar]; // isso provalvelmente está errado------------------------------------------------
-        }
+        if(e == 0) pc = mar;
+    }
+    else if(ir == 26) // JUMP IF LOWER THA
+    {
+        if(l == 1) pc = mar;
     }
     else if(ir == 27) // JUMP IF LOWER THAN OR EQUAL TO
     {
-        if(e == 1 || l == 1){
-            pc = memoria[mar]; // isso provalvelmente está errado------------------------------------------------
-        }
+        if(e == 1 || l == 1) pc = mar;
     }
-
+    else if(ir == 28) // JUMP IF GREATER THAN
+    {
+        if(g == 1) pc = mar;
+    }
     else if(ir == 29) // JUMP IF GREATER THAN OR EQUAL TO
     {
-        if(e == 1 || g == 1){
-            pc = memoria[mar]; // isso provalvelmente está errado------------------------------------------------
-        }
+        if(e == 1 || g == 1) pc = mar; //----------------------------------------------------------------------------//
+    }
+    else if(ir == 30) // JUMP
+    {
+        pc = mar;
     }
 
-}
-
-int main(void)
-{
-    //lerArquivo("./operação1.txt");
-    //lerArquivo("./operação2.txt");
-    reg[0] = 3;
-    reg[1] = 8;
-    reg[2] = 2;
-    int memoriaInteiro = 0;
-
-    while (1){
-        for (int i = 0; i < 4; i++) memoriaInteiro = (memoriaInteiro << 8) | memoria[4 + i];
-        // printf("%d", memoriaInteiro);
-        showDashboard();
-        Busca();
-        Decodifica();
-        Executa();
-
-        printf("Pressione Enter para continuar...");
-        fflush(stdout);
-        while (getchar() != '\n');
-    }
-    return 0;
+    if (ir != 0) // Se a instrução for diferente de HALT.
+        pc = pc + 4;
 }
