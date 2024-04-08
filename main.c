@@ -30,14 +30,14 @@ int main(void)
 
 void lerArquivo(const char *Arquivo){
     char i = 0;
-    FILE *arquivo;
-    arquivo = fopen(Arquivo, "r");
+    FILE *arquivo = fopen(Arquivo, "r");
     if(arquivo == NULL){
         perror("Nao foi possivel abrir o arquivo");
         return;
     }
+
     char buffer[256];
-    while(fgets(buffer,sizeof(buffer), arquivo)){
+    while(fgets(buffer, sizeof(buffer), arquivo)){
         buffer[strcspn(buffer, "\n")] = 0;
         //insere(buffer);
     }
