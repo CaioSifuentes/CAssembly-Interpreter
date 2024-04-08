@@ -1,4 +1,4 @@
-unsigned char memoria[154] = {0b01100000, 0b00001001, 0b000000000, 0b00000000}; // Memória RAM
+unsigned char memoria[154] = {0b10001000, 0b00000000, 0b000000000, 0b00001010, 0b00000000, 0b00000000, 0b000000000, 0b00001010}; // Memória RAM
 
 unsigned int mbr; // Barramento MBR
 

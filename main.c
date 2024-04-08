@@ -76,7 +76,7 @@ void Decodifica(void)
         ro1 = mbr >> 19;
         ro1 = ro1 & 0b1111;
 
-        mar = mar & 0b1111111111111111111;
+        mar = mbr & 0b1111111111111111111;
     }
     else if (ir >= 7 && ir <= 13){
         ro0 = mbr >> 23;
@@ -92,16 +92,16 @@ void Decodifica(void)
         ro0 = mbr >> 23;
         ro0 = ro0 & 0b1111;
 
-        mar = mar & 0b11111111111111111111111;
+        mar = mbr & 0b11111111111111111111111;
     }
     else if (ir >= 16 && ir <= 23){
         ro0 = mbr >> 23;
         ro0 = ro0 & 0b1111;
 
-        imm = imm & 0b11111111111111111111111;
+        imm = mbr & 0b11111111111111111111111;
     }
     else if (ir >= 24 && ir <= 30){
-        mar = mar & 0b11111111111111111111111;
+        mar = mbr & 0b11111111111111111111111;
     }
     else {}
 }
@@ -133,9 +133,10 @@ void Executa (void)
         if (reg[ro0] > reg[ro1]) g = 1;
         else g = 0;
     }
-     else if(ir == 5){ // LOAD VIA BASE+OFFSET
+    else if(ir == 5) // LOAD VIA BASE+OFFSET
+     { 
 
-        reg[ro0] = memoria[mar + reg[ro1]]; // Não sei se é assim, esse tava dificil kkkk
+        reg[ro0] = memoria[mar + reg[ro1]]; // Não sei se é assim, esse tava dificil kkkk------------------------------------------------
     }
     else if (ir == 6) // STORE VIA BASE+OFFSET
     {
@@ -155,45 +156,78 @@ void Executa (void)
     {
         reg[ro0] = reg[ro1] / reg[ro2];
     }
-     else if(ir == 11){ // LOGICAL-AND ON REGISTER
+    else if(ir == 11){ // LOGICAL-AND ON REGISTER
         reg[ro0] = reg[ro1] & reg[ro2];
     }
     else if (ir == 12) // LOGICAL-OR ON REGISTER
     {
         reg[ro0] = reg[ro1] | reg[ro2];
     }
-     else if(ir == 13){ // LOGICAL-XOR ON REGISTER
+    else if(ir == 13) // LOGICAL-XOR ON REGISTER
+    { 
         reg[ro0] = reg[ro1] ^ reg[ro2];
     }
-    else if(ir == 15){ // STORE
-        memoria[mar] = reg[ro0];
+    else if(ir == 14) // LOAD
+    {
+        for (int i = 0; i < 4; i++) reg[ro0] = (reg[ro0] << 8) | memoria[mar + i];
     }
-    else if(ir == 17){ // MOVE IMMEDIATE TO THE HIGHER HALF OF THE REGISTER
-        // Não sei fazer esse
+    else if(ir == 15) // STORE
+    {
+        for (int i = 0; i < 4; i++) memoria[mar + i] = (reg[ro0] << (24 - (8*i))) & 0b11111111; // EXPLICAR
     }
-    else if(ir == 19){ // SUBTRACT IMMEDIATE
+    else if(ir == 16) // MOVE IMMEDIATE TO THE LOWER HALF OF THE REGISTER
+    {
+        reg[ro0] = (imm & 0b1111111111111111);
+    }
+    else if(ir == 17) // MOVE IMMEDIATE TO THE HIGHER HALF OF THE REGISTER
+    {
+        reg[ro0] = ((imm & 0b1111111111111111) << 16) | (reg[ro0] & 0b1111111111111111); // EXPLICAR
+    }
+    else if(ir == 18) // ADD IMMEDIATE
+    {
+        reg[ro0] = reg[ro0] + imm;
+    }
+    else if(ir == 19) // SUBTRACT IMMEDIATE
+    { 
         reg[ro0] = reg[ro0] - imm;
     }
-    else if(ir == 21){ // DIVIDE IMMEDIATE
+    else if(ir == 20) // MULTIPLY IMMEDIATE
+    {
+        reg[ro0] = reg[ro0] * imm;
+    }
+    else if(ir == 21) // DIVIDE IMMEDIATE
+    { 
         reg[ro0] = reg[ro0] / imm;
     }
-    else if(ir == 23){ // RIGHT SHIFT
+    else if(ir == 22) // LEFT SHIFT
+    {
+        reg[ro0] = reg[ro0] << imm;
+    }
+    else if(ir == 23) // RIGHT SHIFT
+    {
         reg[ro0] = reg[ro0] >> imm;
     }
-    else if(ir == 25){ // JUMP IF NOT EQUAL TO
+    else if(ir == 24) // JUMP IF EQUAL TO
+    {
+
+    }
+    else if(ir == 25) // JUMP IF NOT EQUAL TO
+    {
         if(e == 0){
-            pc = memoria[mar]; // isso provalvelmente está errado
+            pc = memoria[mar]; // isso provalvelmente está errado------------------------------------------------
         }
     }
-    else if(ir == 27){ // JUMP IF LOWER THAN OR EQUAL TO
+    else if(ir == 27) // JUMP IF LOWER THAN OR EQUAL TO
+    {
         if(e == 1 || l == 1){
-            pc = memoria[mar]; // isso provalvelmente está errado
+            pc = memoria[mar]; // isso provalvelmente está errado------------------------------------------------
         }
     }
 
-    else if(ir == 29){ // JUMP IF GREATER THAN OR EQUAL TO
+    else if(ir == 29) // JUMP IF GREATER THAN OR EQUAL TO
+    {
         if(e == 1 || g == 1){
-            pc = memoria[mar]; // isso provalvelmente está errado
+            pc = memoria[mar]; // isso provalvelmente está errado------------------------------------------------
         }
     }
 
@@ -203,11 +237,14 @@ int main(void)
 {
     //lerArquivo("./operação1.txt");
     //lerArquivo("./operação2.txt");
-    reg[0] = 0;
+    reg[0] = 3;
     reg[1] = 8;
     reg[2] = 2;
+    int memoriaInteiro = 0;
 
     while (1){
+        for (int i = 0; i < 4; i++) memoriaInteiro = (memoriaInteiro << 8) | memoria[4 + i];
+        // printf("%d", memoriaInteiro);
         showDashboard();
         Busca();
         Decodifica();
