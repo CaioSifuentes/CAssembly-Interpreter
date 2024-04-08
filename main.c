@@ -5,8 +5,8 @@
 
 int main(void)
 {
-    //lerArquivo("./operação1.txt");
-    //lerArquivo("./operação2.txt");
+    lerArquivo("./operação1.txt");
+
     reg[0] = 3;
     reg[1] = 8;
     reg[2] = 2;
@@ -28,28 +28,67 @@ int main(void)
     return 0;
 }
 
-void lerArquivo(const char *Arquivo){
-    char i = 0;
+void lerArquivo(const char *Arquivo) {
     FILE *arquivo = fopen(Arquivo, "r");
-    if(arquivo == NULL){
-        perror("Nao foi possivel abrir o arquivo");
+    if (arquivo == NULL) {
+        perror("Não foi possível abrir o arquivo");
         return;
     }
 
     char buffer[256];
-    while(fgets(buffer, sizeof(buffer), arquivo)){
-        buffer[strcspn(buffer, "\n")] = 0;
-        //insere(buffer);
-    }
-    fclose(arquivo);
-}
+    while (fgets(buffer, sizeof(buffer), arquivo)) {
+        char instrucao[6];
+        char tipoInstrução;
+        unsigned int endereco, AmazenamentoResultado, valor1, valor2;
 
-void printBinario(int num) {
-    printf("0b");
-    for(int i = sizeof(int) * 8 - 1; i >= 0; i--) {
-        printf("%d", (num >> i) & 1);
-        if (i % 8 == 0) printf(" ");
+        if (sscanf(buffer, "%x;%c;%s r%x, %x", &endereco, &tipoInstrução, instrucao, &AmazenamentoResultado, &valor1) == 5) {
+            if (strcmp(instrucao, "ld") == 0){
+                // instrução de Load
+            }else if (strcmp(instrucao, "st") == 0){
+                // instrução de store
+            }else if (strcmp(instrucao, "addi") == 0){
+                // instrução de addi
+            }else(){
+               fprintf(stderr,"Instrução não existente!!");
+                return -1;
+            }
+
+        } else if (sscanf(buffer, "%x;%c;%s r%x, r%x, r%x", &endereco, &tipoInstrução, instrucao, &AmazenamentoResultado, &valor1, &valor2) == 6) {
+            if (strcmp(instrucao, "sub") == 0) {
+                //instrução de subtração
+
+            } else if (strcmp(instrucao, "div") == 0) {
+                //instrução de divisão
+
+            }else if (strcmp(instrucao, "mul") == 0){
+                // instrução de multiplicação
+
+            }else if (strcmp(instrução, "add") == 0){
+                // instrução de adição
+
+            }else(){
+                fprintf(stderr,"Instrução não existente!!");
+                return -1;
+            }
+        } else if(sscanf(buffer, "%x;%c;%s", &endereco, &tipoInstrução, instrucao) == 3){
+               // instrução de halt
+
+        } else if(sscanf(buffer, "%x;%c;%x",&endereco, &tipoInstrução, &valor1) == 3){
+               // operação/armazenamento de dados
+               memoria[endereco] = valor1;
+        } else if(sscanf(buffer, "%x;%c;%s r%x, r%x", &endereco, &tipoInstrução, &valor1, &valor2) == 5){
+               // instrução de cmp
+
+        } else if(sscanf(buffer, "%x;%c;%s %x", &endereco, &tipoInstrução, &instrucao, &valor1) == 4){
+               // instrução de jle
+        }
+        else(){
+        }
+
+        return 0;
     }
+
+    fclose(arquivo);
 }
 
 void showDashboard() {
@@ -150,7 +189,7 @@ void Executa (void)
         else g = 0;
     }
     else if(ir == 5) // LOAD VIA BASE+OFFSET
-     { 
+     {
         reg[ro0] = memoria[mar + reg[ro1]]; // Não sei se é assim, esse tava dificil kkkk------------------------------------------------
     }
     else if (ir == 6) // STORE VIA BASE+OFFSET
@@ -179,17 +218,17 @@ void Executa (void)
         reg[ro0] = reg[ro1] | reg[ro2];
     }
     else if(ir == 13) // LOGICAL-XOR ON REGISTER
-    { 
+    {
         reg[ro0] = reg[ro1] ^ reg[ro2];
     }
     else if(ir == 14) // LOAD
     {
-        for (int i = 0; i < 4; i++) 
+        for (int i = 0; i < 4; i++)
             reg[ro0] = (reg[ro0] << 8) | memoria[mar + i];
     }
     else if(ir == 15) // STORE
     {
-        for (int i = 0; i < 4; i++) 
+        for (int i = 0; i < 4; i++)
             memoria[mar + i] = (reg[ro0] << (24 - (8*i))) & 0b11111111; //------------------------------------------------------------//
     }
     else if(ir == 16) // MOVE IMMEDIATE TO THE LOWER HALF OF THE REGISTER
@@ -205,7 +244,7 @@ void Executa (void)
         reg[ro0] = reg[ro0] + imm;
     }
     else if(ir == 19) // SUBTRACT IMMEDIATE
-    { 
+    {
         reg[ro0] = reg[ro0] - imm;
     }
     else if(ir == 20) // MULTIPLY IMMEDIATE
@@ -213,7 +252,7 @@ void Executa (void)
         reg[ro0] = reg[ro0] * imm;
     }
     else if(ir == 21) // DIVIDE IMMEDIATE
-    { 
+    {
         reg[ro0] = reg[ro0] / imm;
     }
     else if(ir == 22) // LEFT SHIFT
