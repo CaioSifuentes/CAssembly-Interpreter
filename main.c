@@ -5,7 +5,7 @@
 
 int main(void)
 {
-    lerArquivo("./operação1.txt");
+    //lerArquivo("./operação1.txt");
 
     reg[0] = 3;
     reg[1] = 8;
@@ -14,7 +14,7 @@ int main(void)
 
     while (1){
         for (int i = 0; i < 4; i++) memoriaInteiro = (memoriaInteiro << 8) | memoria[4 + i];
-        // printf("%d", memoriaInteiro);
+            printf("%d", memoriaInteiro);
         showDashboard();
         Busca();
         Decodifica();
@@ -38,57 +38,201 @@ void lerArquivo(const char *Arquivo) {
     char buffer[256];
     while (fgets(buffer, sizeof(buffer), arquivo)) {
         char instrucao[6];
-        char tipoInstrução;
-        unsigned int endereco, AmazenamentoResultado, valor1, valor2;
+        char tipoInstrucao;
+        unsigned int endereco, ArmazenamentoResultado, valor1, valor2;
 
-        if (sscanf(buffer, "%x;%c;%s r%x, %x", &endereco, &tipoInstrução, instrucao, &AmazenamentoResultado, &valor1) == 5) {
+        if (sscanf(buffer, "%x;%c;%s r%x, %x", &endereco, &tipoInstrucao, instrucao, &ArmazenamentoResultado, &valor1) == 5) {
+
             if (strcmp(instrucao, "ld") == 0){
                 // instrução de Load
+
+              //  memoria[endereco++] = instrucao;
+              //  memoria[endereco++] = ArmazenamentoResultado;
+              //  memoria[endereco++] = valor1;
+
             }else if (strcmp(instrucao, "st") == 0){
                 // instrução de store
+
+              //  memoria[endereco++] = instrucao;
+              //  memoria[endereco++] = ArmazenamentoResultado;
+              //  memoria[endereco++] = valor1;
+
             }else if (strcmp(instrucao, "addi") == 0){
                 // instrução de addi
-            }else(){
+
+              //  memoria[endereco++] = instrucao;
+              //  memoria[endereco++] = ArmazenamentoResultado;
+              // memoria[endereco++] = valor1;
+
+            }else if (strcmp(instrucao, "movil") == 0){
+                // instrução movil
+
+               // memoria[endereco++] = instrucao;
+               // memoria[endereco++] = ArmazenamentoResultado;
+               // memoria[endereco++] = valor1;
+
+            }else if (strcmp(instrucao, "movih") == 0){
+                // instrução movih
+
+               // memoria[endereco++] = instrucao;
+               // memoria[endereco++] = ArmazenamentoResultado;
+               // memoria[endereco++] = valor1;
+
+            }else if (strcmp(instrucao, "subi") == 0){
+                // instrução subi
+
+               // memoria[endereco++] = instrucao;
+               // memoria[endereco++] = ArmazenamentoResultado;
+               // memoria[endereco++] = valor1;
+
+            }else if (strcmp(instrucao, "muli") == 0){
+                // instrução muli
+
+               // memoria[endereco++] = instrucao;
+               // memoria[endereco++] = ArmazenamentoResultado;
+               // memoria[endereco++] = valor1;
+
+            }else if (strcmp(instrucao, "divi") == 0){
+                // instrução divi
+
+               // memoria[endereco++] = instrucao;
+               // memoria[endereco++] = ArmazenamentoResultado;
+               // memoria[endereco++] = valor1;
+
+            }else if (strcmp(instrucao, "lsh") == 0){
+                // instrução lsh
+
+               // memoria[endereco++] = instrucao;
+               // memoria[endereco++] = ArmazenamentoResultado;
+               // memoria[endereco++] = valor1;
+
+            }else if (strcmp(instrucao, "rsh") == 0){
+                // instrução rsh
+
+               // memoria[endereco++] = instrucao;
+               // memoria[endereco++] = ArmazenamentoResultado;
+               // memoria[endereco++] = valor1;
+
+            }else{
                fprintf(stderr,"Instrução não existente!!");
                 return -1;
             }
 
-        } else if (sscanf(buffer, "%x;%c;%s r%x, r%x, r%x", &endereco, &tipoInstrução, instrucao, &AmazenamentoResultado, &valor1, &valor2) == 6) {
+        } else if (sscanf(buffer, "%x;%c;%s r%x, r%x, r%x", &endereco, &tipoInstrucao, instrucao, &ArmazenamentoResultado, &valor1, &valor2) == 6) {
+
             if (strcmp(instrucao, "sub") == 0) {
-                //instrução de subtração
+                //instrução sub
 
             } else if (strcmp(instrucao, "div") == 0) {
-                //instrução de divisão
+                //instrução div
 
             }else if (strcmp(instrucao, "mul") == 0){
-                // instrução de multiplicação
+                // instrução mul
 
-            }else if (strcmp(instrução, "add") == 0){
-                // instrução de adição
+            }else if (strcmp(instrucao, "add") == 0){
+                // instrução add
 
-            }else(){
+            }else if (strcmp(instrucao, "and") == 0){
+                // instrução and
+
+            }else if (strcmp(instrucao,"or") == 0){
+                // instrução or
+
+            }else if (strcmp(instrucao, "xor") == 0){
+                // instrução xor
+
+            }else{
                 fprintf(stderr,"Instrução não existente!!");
                 return -1;
             }
-        } else if(sscanf(buffer, "%x;%c;%s", &endereco, &tipoInstrução, instrucao) == 3){
-               // instrução de halt
 
-        } else if(sscanf(buffer, "%x;%c;%x",&endereco, &tipoInstrução, &valor1) == 3){
+        } else if(sscanf(buffer, "%x;%c;%s", &endereco, &tipoInstrucao, instrucao) == 3){
+
+            if (strcmp(instrucao,"hlt") == 0){
+                 // instrução halt
+                return 0;
+            }else if(strcmp(instrucao,"nop") == 0){
+                // instrução nop
+
+            }else{
+                fprintf(stderr,"Instrução não existente!!");
+                return -1;
+            }
+
+        } else if(sscanf(buffer, "%x;%c;%x",&endereco, &tipoInstrucao, &valor1) == 3){
                // operação/armazenamento de dados
-               memoria[endereco] = valor1;
-        } else if(sscanf(buffer, "%x;%c;%s r%x, r%x", &endereco, &tipoInstrução, &valor1, &valor2) == 5){
-               // instrução de cmp
 
-        } else if(sscanf(buffer, "%x;%c;%s %x", &endereco, &tipoInstrução, &instrucao, &valor1) == 4){
-               // instrução de jle
-        }
-        else(){
+               memoria[endereco] = valor1;
+
+        } else if(sscanf(buffer, "%x;%c;%s r%x, r%x", &endereco, &tipoInstrucao, &instrucao, &valor1, &valor2) == 5){
+
+            if (strcmp(instrucao, "cmp") == 0){
+                // instrução cmp
+
+            }else if (strcmp(instrucao, "movr") == 0){
+                // instrução movr
+
+            }else{
+                fprintf(stderr,"Instrução não existente!!");
+                return -1;
+            }
+
+
+        } else if(sscanf(buffer, "%x;%c;%s %x", &endereco, &tipoInstrucao, &instrucao, &valor1) == 4){
+
+            if (strcmp(instrucao, "jle") == 0){
+                 // instrução jle
+
+            }else if (strcmp(instrucao, "je") == 0){
+                // instrução je
+
+            }else if (strcmp(instrucao, "jne") == 0){
+                // instrução jne
+
+            }else if (strcmp(instrucao, "jl") == 0){
+                // instrução jl
+
+            }else if (strcmp(instrucao, "jg") == 0){
+                // instrução jg
+
+            }else if (strcmp(instrucao, "jge") == 0){
+                // instrução jge
+
+            }else if (strcmp(instrucao, "jmp") == 0){
+                // instrução jmp
+
+            }else{
+                fprintf(stderr,"Instrução não existente!!");
+                return -1;
+            }
+        }else if(sscanf(buffer, "%x;%c;%s r%x, r%x, %x", &endereco, &tipoInstrucao, &instrucao, &ArmazenamentoResultado, &valor1, &valor2) == 6){
+            if (strcmp(instrucao, "ldbo") == 0){
+                //instrução ldbo
+            }else if (strcmp(instrucao, "stbo") == 0){
+                //instrução stbo
+            }else{
+                fprintf(stderr,"Instrução não existente!!");
+                return -1;
+            }
+
+
+
+        }else{
+
+
         }
 
         return 0;
     }
 
     fclose(arquivo);
+}
+void printBinario(int num) {
+    printf("0b");
+    for(int i = sizeof(int) * 8 - 1; i >= 0; i--) {
+        printf("%d", (num >> i) & 1);
+        if (i % 8 == 0) printf(" ");
+    }
 }
 
 void showDashboard() {
@@ -190,7 +334,7 @@ void Executa (void)
     }
     else if(ir == 5) // LOAD VIA BASE+OFFSET
      {
-        reg[ro0] = memoria[mar + reg[ro1]]; // Não sei se é assim, esse tava dificil kkkk------------------------------------------------
+        reg[ro0] = memoria[mar + reg[ro1]]; // Não sei se é assim------------------------------------------------
     }
     else if (ir == 6) // STORE VIA BASE+OFFSET
     {
@@ -265,27 +409,45 @@ void Executa (void)
     }
     else if(ir == 24) // JUMP IF EQUAL TO
     {
-        if(e == 1) pc = mar; //----------------------------------------------------------------------------//
+        if(e == 1)
+            pc = mar; //----------------------------------------------------------------------------//
+        else
+            pc += 4;
     }
     else if(ir == 25) // JUMP IF NOT EQUAL TO
     {
-        if(e == 0) pc = mar;
+        if(e == 0)
+            pc = mar;
+         else
+            pc += 4;
     }
     else if(ir == 26) // JUMP IF LOWER THA
     {
-        if(l == 1) pc = mar;
+        if(l == 1)
+            pc = mar;
+         else
+            pc += 4;
     }
     else if(ir == 27) // JUMP IF LOWER THAN OR EQUAL TO
     {
-        if(e == 1 || l == 1) pc = mar;
+        if(e == 1 || l == 1)
+            pc = mar;
+         else
+            pc += 4;
     }
     else if(ir == 28) // JUMP IF GREATER THAN
     {
-        if(g == 1) pc = mar;
+        if(g == 1)
+            pc = mar;
+         else
+            pc += 4;
     }
     else if(ir == 29) // JUMP IF GREATER THAN OR EQUAL TO
     {
-        if(e == 1 || g == 1) pc = mar; //----------------------------------------------------------------------------//
+        if(e == 1 || g == 1)
+            pc = mar; //----------------------------------------------------------------------------//
+         else
+            pc += 4;
     }
     else if(ir == 30) // JUMP
     {
