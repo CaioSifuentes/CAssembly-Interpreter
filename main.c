@@ -1,10 +1,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <windows.h>
 #include "cpu.h"
 
 int main(void)
 {
+    SetConsoleOutputCP(CP_UTF8);
+
     // NOTA: O arquivo 'operacao0.txt' não roda nada.
     printf("Digite o nome do arquivo que você deseja executar (Exemplo: operacao1.txt):");
     int retorno = 0;
@@ -26,7 +29,13 @@ int main(void)
 
     
     while (1){
-        showDashboard();
+        /*
+        A função 'showDashboard' tem dois parâmetros de configuração:
+
+        decOuHex: Você pode alterar entre 'h' ou 'd' para mudar a impressão dos valores para hexadecimal ou decimal, respectivamente.
+        visibleRAM: Você pode alterar entre 0 ou 1 para definir se o programa irá imprimir a memória ou não.
+        */
+        showDashboard('h', 0);
         Busca();
         Decodifica();
         Executa();
@@ -415,21 +424,61 @@ void printBinario(int num) {
     }
 }
 
-void showDashboard() {
+void showDashboard(char decOuHex, int visibleRAM) {
     system("cls");
     printf("======================================================================\n");
     printf("| MBR: "); printBinario(mbr); printf("|\n");
-    printf("| IR: %d | MAR: %u |\n", ir, mar);
-    printf("| Ro0: %d | Ro1: %d | Ro2: %d | IMM: %d |\n", ro0, ro1, ro2, imm);
-    printf("-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-\n");
-    printf("| Registradores:\n");
-    for (int i = 0; i < 16; i++) {
-        printf("| Reg[%d]: %u | ", i, reg[i]);
-        if (i % 2 == 1) printf("\n");
+    if (decOuHex == 'd') // Parametro 'd' imrprime os valores em decimal.
+    {
+        printf("| IR: %d | MAR: %u |\n", ir, mar);
+        printf("| Ro0: %d | Ro1: %d | Ro2: %d | IMM: %d |\n", ro0, ro1, ro2, imm);
+        printf("-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-\n");
+        printf("| Registradores:\n");
+        for (int i = 0; i < 16; i++) {
+            printf("| Reg[%d]: %u | ", i, reg[i]);
+            if (i % 2 == 1) printf("\n");
+        }
+        printf("-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-\n");
+        printf("| E: %d | L: %d | G: %d |\n", e, l, g);
+        printf("| PC: %u |\n", pc);
+        if (visibleRAM){
+            printf("-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-\n");
+            printf("| Memória:\n");
+            for (int i = 1; i < 155; i++) {
+                printf("[%d]: %u ", i - 1, memoria[i-1]);
+                if (i % 20 == 0) printf("\n");
+            }
+            printf("\n-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-\n");
+        }
     }
-    printf("-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-\n");
-    printf("| E: %d | L: %d | G: %d |\n", e, l, g);
-    printf("| PC: %u |\n", pc);
+    else if (decOuHex == 'h') // Parametro 'h' imrprime os valores em hexadecimal.
+    {
+        printf("| IR: %x | MAR: %x |\n", ir, mar);
+        printf("| Ro0: %x | Ro1: %x | Ro2: %x | IMM: %x |\n", ro0, ro1, ro2, imm);
+        printf("-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-\n");
+        printf("| Registradores:\n");
+        for (int i = 0; i < 16; i++) {
+            printf("| Reg[%d]: %x | ", i, reg[i]);
+            if (i % 2 == 1) printf("\n");
+        }
+        printf("-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-\n");
+        printf("| E: %x | L: %x | G: %x |\n", e, l, g);
+        printf("| PC: %x |\n", pc);
+        if (visibleRAM){
+            printf("-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-\n");
+            printf("| Memória:\n");
+            for (int i = 1; i < 155; i++) {
+                printf("[%x]: %x ", i - 1, memoria[i-1]);
+                if (i % 20 == 0) printf("\n");
+            }
+            printf("\n-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-\n");
+        }
+    }
+    else {
+        system("cls");
+        perror("ERRO: Parametro inválido na função 'showDashboard'.");
+        exit(1);
+    }
     printf("======================================================================\n");
 }
 
