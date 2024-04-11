@@ -48,32 +48,32 @@ operacao1.txt
 | not rX            | Logical-Not On Register                           | rX = !rX                                                                                                                          |
 | movr rX, rY       | Move Register                                     | rX = rY                                                                                                                           |
 | cmp rX, rY        | Compare Register                                  | 1. Se rX = rY, então E = 1; senão E = 0 <br> 2. Se rX < rY, então L = 1; senão L = 0 <br> 3. Se rX > rY, então G = 1; senão G = 0 |
-| ldbo rX, rY, M[Z] | Load Via Base + Offset                            | rX = M[Z + rY]           
-| stbo rX, rY, M[Z] | Store Via Base + Offset                           | M[Z + rY] = rX          
-| add rX, rY, rZ    | Add Register                                      | rX = rY + rZ
-| sub rX, rY, rZ    | Substract Register                                | rX = rY - rZ
-| mul rX, rY, rZ    | Multiply Register                                 | rX = rY * rZ
-| div rX, rY, rZ    | Divide Register                                   | rX = rY / rZ
-| and rX, rY, rZ    | Logical-And On Register                           | rX = rY & rZ
-| or rX, rY, rZ     | Logical-Or On Register                            | rX = rY | rZ
-| xor rX, rY, rZ    | Logical-Xor On Register                           | rX = rY ^ rZ
-| ld rX, M[Y]       | Load                                              | rX = M[Y]
-| st rX, M[Y]       | Store                                             | M[Y] = rX
-| movil rX, imm     | Move Immediate To The Lower Half Of The Register  | 
-| movih rX, imm     | Move Immediate To The Higher Half Of The Register |
-| addi rX, imm      | Add Immediate                                     |
-| subi rX, imm      | Substract Immediate                               |
-| muli rX, imm      | Multiply Immediate                                |
-| divi rX, imm      | Divide Immediate                                  |
-| lsh rX, imm       | Left Shift                                        |
-| rsh rX, imm       | Right Shift                                       |
-| je M[X]           | Jump If Equal To                                  |
-| jne M[X]          | Jump If Not Equal To                              |
-| jl M[X]           | Jump If Lower Than                                |
-| jle M[X]          | Jump If Lower Than Or Equal To                    |
-| jg M[X]           | Jump If Greater Than                              |
-| jge M[X]          | Jump If Greater Than Or Equal To                  |
-| jmp M[X]          | Jump                                              |
+| ldbo rX, rY, M[Z] | Load Via Base + Offset                            | rX = M[Z + rY]                                                                                                                    |
+| stbo rX, rY, M[Z] | Store Via Base + Offset                           | M[Z + rY] = rX                                                                                                                    |        
+| add rX, rY, rZ    | Add Register                                      | rX = rY + rZ                                                                                                                      |
+| sub rX, rY, rZ    | Substract Register                                | rX = rY - rZ                                                                                                                      |
+| mul rX, rY, rZ    | Multiply Register                                 | rX = rY * rZ                                                                                                                      |
+| div rX, rY, rZ    | Divide Register                                   | rX = rY / rZ                                                                                                                      |
+| and rX, rY, rZ    | Logical-And On Register                           | rX = rY & rZ                                                                                                                      |
+| or rX, rY, rZ     | Logical-Or On Register                            | rX = rY | rZ                                                                                                                      |
+| xor rX, rY, rZ    | Logical-Xor On Register                           | rX = rY ^ rZ                                                                                                                      |
+| ld rX, M[Y]       | Load                                              | rX = M[Y]                                                                                                                         |
+| st rX, M[Y]       | Store                                             | M[Y] = rX                                                                                                                         |
+| movil rX, imm     | Move Immediate To The Lower Half Of The Register  | Zera rX e move os 16 Bits da direita do Imediato para os 16 Bits da direita do rX.                                                |
+| movih rX, imm     | Move Immediate To The Higher Half Of The Register | Move os 16 Bits da direita do Imediato para os 16 Bits da esquerda do rX, mantendo os 16 Bits da direita de rX.                   |
+| addi rX, imm      | Add Immediate                                     | rX = rX + imm                                                                                                                     |
+| subi rX, imm      | Substract Immediate                               | rX = rX - imm                                                                                                                     |
+| muli rX, imm      | Multiply Immediate                                | rX = rX * imm                                                                                                                     |
+| divi rX, imm      | Divide Immediate                                  | rX = rX / imm                                                                                                                     |
+| lsh rX, imm       | Left Shift                                        | rX = rX << imm                                                                                                                    |
+| rsh rX, imm       | Right Shift                                       | rX = rX >> imm                                                                                                                    |
+| je M[X]           | Jump If Equal To                                  | Se E = 1, então PC = X                                                                                                            |
+| jne M[X]          | Jump If Not Equal To                              | Se E != 1, então PC = X                                                                                                           |
+| jl M[X]           | Jump If Lower Than                                | Se L = 1, então PC = X                                                                                                            |
+| jle M[X]          | Jump If Lower Than Or Equal To                    | Se L = 1 && E = 1, então PC = X                                                                                                   |
+| jg M[X]           | Jump If Greater Than                              | Se G = 1, então PC = X                                                                                                            |
+| jge M[X]          | Jump If Greater Than Or Equal To                  | Se G = 1 && E = 1, então PC = X                                                                                                   |
+| jmp M[X]          | Jump                                              | PC = X                                                                                                                            |
 
 ## Autores
 
