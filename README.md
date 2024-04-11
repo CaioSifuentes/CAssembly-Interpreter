@@ -46,6 +46,14 @@ operacao1.txt
 | hlt       | Halt | Não faz nada. O registrador PC também não é incrementado. Deve ser colocado no fim de todo programa.                  |
 | nop       | No Operation | Não faz nada. O registrador PC ainda é incrementado.                 |
 | not rX       | Logical-Not On Register | rX = !rX                 |
+| movr rX, rY | Move Register | rX = rY |
+| cmp rX, rY | Compare Register | 1. Se rX = rY, então E = 1; senão E = 0; <br> 2. Se rX < rY, então L = 1; senão L = 0; <br> 3. Se rX > rY, então G = 1; senão G = 0; |
+| ldbo rX, rY, M[Z] | Load Via Base + Offset | rX = M[Z + rY] |
+| stbo rX, rY, M[Z] | Store Via Base + Offset | M[Z + rY] = rX |
+|||
+|||
+|||
+|||
 
 ## Autores
 
@@ -53,7 +61,7 @@ operacao1.txt
 Este projeto é um trabalho de implementação da diciplina de Arquitetura e Organização de Computadores I para a turma de 2024/1.  
 Instituto Federal de Educação, Ciência e Tecnologia de Goiás - Campus Anápolis
 
-Plano de projeto planejado pelo docente [Hugo Vinícius Leão e Silva](https://www.escavador.com/sobre/5606654/hugo-vinicius-leao-e-silva).
+Plano de projeto concebido pelo docente [Hugo Vinícius Leão e Silva](https://www.escavador.com/sobre/5606654/hugo-vinicius-leao-e-silva).
 
 ### Dicentes:
 - [Caio César Sifuentes Barcelos](https://github.com/CaioSifuentes)
