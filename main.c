@@ -27,7 +27,7 @@ int main(void)
         retorno = lerArquivo(caminhoCompleto);
     }
 
-    
+
     while (1){
         /*
         A função 'showDashboard' tem dois parâmetros de configuração:
@@ -44,8 +44,8 @@ int main(void)
         fflush(stdout);
         while (getchar() != '\n');
     }
-    
-    
+
+
     return 0;
 }
 /*
@@ -271,14 +271,14 @@ int lerArquivo(const char *Arquivo) {
     while (fgets(buffer, sizeof(buffer), arquivo)) {
         unsigned int posMemoria; char tipoOperacao; char parsedBuffer[50];
         unsigned char pag[4];
-        
+
         /*
         Remove o '\n' do buffer e muda para um '\0'.
         */
         int posicao_nova_linha = strcspn(buffer, "\n");
         if (buffer[posicao_nova_linha] == '\n') buffer[posicao_nova_linha] = '\0';
-        
-        /* 
+
+        /*
         Separa uma linha do arquivo da seguinte maneira:
         Linha de Exemplo: '0;i;ld r0, 86'
 
@@ -290,7 +290,7 @@ int lerArquivo(const char *Arquivo) {
 
         if (tipoOperacao == 'i') // Se estivermos lidando com uma instrução...
         {
-            /* 
+            /*
             Separa a instrução dos parametros passados por ela. Baseado no parsedBuffer recebido anteriormente
             Linha de Exemplo: ld r0, 86
 
@@ -300,7 +300,7 @@ int lerArquivo(const char *Arquivo) {
             char instrucao[5], parametros[45]; unsigned int instrucaoBinario;
             sscanf(parsedBuffer, "%s %20[^\0]", instrucao, parametros);
             instrucaoBinario = instructionToBinary(instrucao);
-            
+
             /*
             Separa os parametros de acordo com o formato da instrução.
             Linha de Exemplo: ld r0 86
@@ -338,7 +338,7 @@ int lerArquivo(const char *Arquivo) {
                 palavraCompleta = (palavraCompleta << 19) | mar;
             }
             else if (instrucaoBinario >= 7 && instrucaoBinario <= 13)
-            {    
+            {
                 sscanf(parametros, "r%d, r%d, r%d", &r0, &r1, &r2);
                 palavraCompleta = (instrucaoBinario << 4) | r0;
                 palavraCompleta = (palavraCompleta << 4) | r1;
@@ -371,7 +371,7 @@ int lerArquivo(const char *Arquivo) {
 
             /*
             Armazena o valor em binário da palavra de 32 bits armazenada na variavel 'palavraCompleta' em "páginas" de 8 bits (char).
-            
+
             Exemplo: 0b00101101 01010111 11111111 11111111
             pag[0] => 0b00101101
             pag[1] => 0b01010111
@@ -389,7 +389,7 @@ int lerArquivo(const char *Arquivo) {
 
             /*
             Armazena o valor em binário da palavra de 32 bits armazenada na variavel 'valorDoDado' em "páginas" de 8 bits (char).
-            
+
             Exemplo: 0b00101010 11001000 11110100 10011000
             pag[0] => 0b00101010
             pag[1] => 0b11001000
@@ -569,13 +569,18 @@ void Executa (void)
         pc += 4;
     }
     else if(ir == 5) // LOAD VIA BASE+OFFSET
-     {
-        reg[ro0] = memoria[mar + reg[ro1]]; // Não sei se é assim------------------------------------------------
+    {
+        reg[ro0] = 0;
+        for (int i = 0; i < 4; i++) {
+            reg[ro0] |= (memoria[mar + ro1 + i] << (i * 8));
+        }
         pc += 4;
     }
     else if (ir == 6) // STORE VIA BASE+OFFSET
     {
-        // Não sei fazer. ------------------------------------------------
+        for (int i = 0; i < 4; i++) {
+            memoria[mar + ro1 + i] = (reg[ro0] >> (i * 8)) & 0xFF;
+        }
         pc += 4;
     }
      else if(ir == 7){ // ADD REGISTER
