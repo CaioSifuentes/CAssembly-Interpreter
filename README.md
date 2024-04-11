@@ -1,4 +1,4 @@
-# Implemented in C CPU (Simulador de CPU)
+# CAssembly-Interpreter (Simulador de CPU)
 
 Este é um simulador de uma Unidade de Processamento Central (CPU) básica desenvolvida em linguagem C. A CPU simulada é capaz de executar uma série de instruções básicas e manipular uma memória simulada.
 
