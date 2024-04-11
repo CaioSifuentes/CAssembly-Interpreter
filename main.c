@@ -5,13 +5,14 @@
 
 int main(void)
 {
-    //lerArquivo("./operação1.txt");
+    lerArquivo("./operacao1.txt");
 
     reg[0] = 3;
     reg[1] = 8;
     reg[2] = 2;
     int memoriaInteiro = 0;
 
+    /*
     while (1){
         for (int i = 0; i < 4; i++) memoriaInteiro = (memoriaInteiro << 8) | memoria[4 + i];
             printf("%d", memoriaInteiro);
@@ -25,9 +26,10 @@ int main(void)
         while (getchar() != '\n');
 
     }
+    */
     return 0;
 }
-
+/*
 void lerArquivo(const char *Arquivo) {
     FILE *arquivo = fopen(Arquivo, "r");
     if (arquivo == NULL) {
@@ -227,6 +229,172 @@ void lerArquivo(const char *Arquivo) {
 
     fclose(arquivo);
 }
+*/
+
+int instructionToBinary(char instrucao[]){
+char instrucoes[31][10] = {"hlt", "nop", "not", "movr", "cmp", "ldbo", "stbo", "add", "sub", "mul", "div", "and", "or", "xor", "ld", "st", "movil", "movih", "addi", "subi", "muli", "divi", "lsh", "rsh", "je", "jne", "jl", "jle", "jg", "jge", "jmp"};
+    for (int i = 0; i < 31; i++)
+    {
+        if (strcmp(instrucoes[i], instrucao) == 0) return i;
+    }
+    return -1;
+}
+
+void lerArquivo(const char *Arquivo) {
+    FILE *arquivo = fopen(Arquivo, "r");
+    if (arquivo == NULL) {
+        perror("Não foi possível abrir o arquivo");
+        return;
+    }
+
+    char buffer[256];
+    int linhaAtual = 1;
+    while (fgets(buffer, sizeof(buffer), arquivo)) {
+        unsigned int posMemoria; char tipoOperacao; char parsedBuffer[50];
+        unsigned char pag[4];
+        
+        /*
+        Remove o '\n' do buffer e muda para um '\0'.
+        */
+        int posicao_nova_linha = strcspn(buffer, "\n");
+        if (buffer[posicao_nova_linha] == '\n') buffer[posicao_nova_linha] = '\0';
+        
+        /* 
+        Separa uma linha do arquivo da seguinte maneira:
+        Linha de Exemplo: '0;i;ld r0, 86'
+
+        posMemoria => Posição na memória. (Exemplo: 0)
+        tipoOperacao => Tipo de Operação a ser feita entre i e d. (Exemplo: i)
+        parsedBuffer => A parte restante da linha. (Exemplo: ld r0, 86)
+        */
+        sscanf(buffer, "%x;%c;%256[^\0]", &posMemoria, &tipoOperacao, parsedBuffer);
+
+        if (tipoOperacao == 'i') // Se estivermos lidando com uma instrução...
+        {
+            /* 
+            Separa a instrução dos parametros passados por ela. Baseado no parsedBuffer recebido anteriormente
+            Linha de Exemplo: ld r0, 86
+
+            instrucao => String da instrução. (Exemplo: ld)
+            tipoOperacao => String com todos os parametros da instrução. (Exemplo: r0, 86)
+            */
+            char instrucao[5], parametros[45]; unsigned int instrucaoBinario;
+            sscanf(parsedBuffer, "%s %20[^\0]", instrucao, parametros);
+            instrucaoBinario = instructionToBinary(instrucao);
+            
+            /*
+            Separa os parametros de acordo com o formato da instrução.
+            Linha de Exemplo: ld r0 86
+
+            r0 => Valor do registrador citado na instrução. (Exemplo: 0)
+            mar => Valor da posição da memória citada na instrução. (Exemplo: 86)
+
+            Outros valores:
+            r1, r2 => Valores dos registrados citados na instrução.
+            imm => Valor do imediato citado na instrução.
+
+            Por fim, acumula tudo em uma única palavra de 32 bits na variavel 'palavraCompleta', conforme o formato da instrução.
+            Exemplo: 0b01110000 00000000 00000000 10000110
+            */
+            unsigned int r0, r1, r2, mar, imm, palavraCompleta;
+            if (instrucaoBinario == 2)
+            {
+                sscanf(parametros, "r%d", &r0);
+                palavraCompleta = (instrucaoBinario << 4) | r0;
+                palavraCompleta = palavraCompleta << 23;
+            }
+            else if (instrucaoBinario >= 3 && instrucaoBinario <= 4)
+            {
+                sscanf(parametros, "r%d, r%d", &r0, &r1);
+                palavraCompleta = (instrucaoBinario << 4) | r0;
+                palavraCompleta = (palavraCompleta << 4) | r1;
+                palavraCompleta = palavraCompleta << 19;
+            }
+            else if (instrucaoBinario >= 5 && instrucaoBinario <= 6)
+            {
+                sscanf(parametros, "r%d, r%d, %x", &r0, &r1, &mar);
+                palavraCompleta = (instrucaoBinario << 4) | r0;
+                palavraCompleta = (palavraCompleta << 4) | r1;
+                palavraCompleta = (palavraCompleta << 19) | mar;
+            }
+            else if (instrucaoBinario >= 7 && instrucaoBinario <= 13)
+            {    
+                sscanf(parametros, "r%d, r%d, r%d", &r0, &r1, &r2);
+                palavraCompleta = (instrucaoBinario << 4) | r0;
+                palavraCompleta = (palavraCompleta << 4) | r1;
+                palavraCompleta = (palavraCompleta << 4) | r2;
+                palavraCompleta = (palavraCompleta << 15);
+            }
+            else if (instrucaoBinario >= 14 && instrucaoBinario <= 15)
+            {
+                sscanf(parametros, "r%d, %x", &r0, &mar);
+                palavraCompleta = (instrucaoBinario << 4) | r0;
+                palavraCompleta = (palavraCompleta << 23) | mar;
+            }
+            else if (instrucaoBinario >= 16 && instrucaoBinario <= 23)
+            {
+                sscanf(parametros, "r%d, %x", &r0, &imm);
+                palavraCompleta = (instrucaoBinario << 4) | r0;
+                palavraCompleta = (palavraCompleta << 23) | imm;
+            }
+            else if (instrucaoBinario >= 24 && instrucaoBinario <= 30)
+            {
+                sscanf(parametros, "%x", &mar);
+                palavraCompleta = (instrucaoBinario << 4);
+                palavraCompleta = (palavraCompleta << 23) | mar;
+            }
+            else
+            {
+                printf("FALHA NA LEITURA DO CÓDIGO: INSTRUÇÃO NÃO ENCONTRADA. PRÓXIMO DA LINHA %d.", linhaAtual);
+                exit(1);
+            }
+
+            /*
+            Armazena o valor em binário da palavra de 32 bits armazenada na variavel 'palavraCompleta' em "páginas" de 8 bits (char).
+            
+            Exemplo: 0b00101101 01010111 11111111 11111111
+            pag[0] => 0b00101101
+            pag[1] => 0b01010111
+            pag[2] => 0b11111111
+            pag[3] => 0b11111111
+            */
+            for (int i = 0; i < 4; i++)
+                pag[i] = (palavraCompleta >> (24 - (8*i))) & 0b11111111;
+
+        }
+        else if (tipoOperacao == 'd') // Se estivermos lidando com um dado...
+        {
+            unsigned int valorDoDado;
+            sscanf(parsedBuffer, "%x", &valorDoDado);
+
+            /*
+            Armazena o valor em binário da palavra de 32 bits armazenada na variavel 'valorDoDado' em "páginas" de 8 bits (char).
+            
+            Exemplo: 0b00101010 11001000 11110100 10011000
+            pag[0] => 0b00101010
+            pag[1] => 0b11001000
+            pag[2] => 0b11110100
+            pag[3] => 0b10011000
+            */
+            for (int i = 0; i < 4; i++)
+                pag[i] = (valorDoDado >> (24 - (8*i))) & 0b11111111;
+        }
+        else // Se o valor for diferente do esperado...
+        {
+            printf("FALHA NA LEITURA DO CÓDIGO: TIPO DE OPERAÇÃO NÃO ENCONTRADO. PRÓXIMO DA LINHA %d.", linhaAtual);
+            exit(1);
+        }
+
+        /*
+        Adiciona as páginas na memória conforme o valor indicado na linha.
+        */
+        for (int i = 0; i < 4; i++) memoria[posMemoria + i] = pag[i];
+
+        linhaAtual++;
+    }
+    fclose(arquivo);
+}
+
 void printBinario(int num) {
     printf("0b");
     for(int i = sizeof(int) * 8 - 1; i >= 0; i--) {
@@ -313,13 +481,17 @@ void Decodifica(void)
 void Executa (void)
 {
     if (ir == 1) // NO OPERATION
-    {}
+    {
+        pc += 4;
+    }
     else if (ir == 2) // LOGICAL-NOT ON REGISTER
     {
         reg[ro0] = !(reg[ro0]);
+        pc += 4;
     }
     else if(ir == 3){ // MOVE REGISTER
         reg[ro0] = reg[ro1];
+        pc += 4;
     }
     else if (ir == 4) // COMPARE REGISTER
     {
@@ -331,49 +503,62 @@ void Executa (void)
 
         if (reg[ro0] > reg[ro1]) g = 1;
         else g = 0;
+
+        pc += 4;
     }
     else if(ir == 5) // LOAD VIA BASE+OFFSET
      {
         reg[ro0] = memoria[mar + reg[ro1]]; // Não sei se é assim------------------------------------------------
+        pc += 4;
     }
     else if (ir == 6) // STORE VIA BASE+OFFSET
     {
         // Não sei fazer. ------------------------------------------------
+        pc += 4;
     }
      else if(ir == 7){ // ADD REGISTER
         reg[ro0] = reg[ro1] + reg[ro2];
+        pc += 4;
     }
     else if (ir == 8) // SUBTRACT REGISTER
     {
         reg[ro0] = reg[ro1] - reg[ro2];
+        pc += 4;
     }
      else if(ir == 9){ // MULTIPLY REGISTER
         reg[ro0] = reg[ro1] * reg[ro2];
+        pc += 4;
     }
     else if (ir == 10) // DIVIDE REGISTER
     {
         reg[ro0] = reg[ro1] / reg[ro2];
+        pc += 4;
     }
     else if(ir == 11){ // LOGICAL-AND ON REGISTER
         reg[ro0] = reg[ro1] & reg[ro2];
+        pc += 4;
     }
     else if (ir == 12) // LOGICAL-OR ON REGISTER
     {
         reg[ro0] = reg[ro1] | reg[ro2];
+        pc += 4;
     }
     else if(ir == 13) // LOGICAL-XOR ON REGISTER
     {
         reg[ro0] = reg[ro1] ^ reg[ro2];
+        pc += 4;
     }
     else if(ir == 14) // LOAD
     {
         for (int i = 0; i < 4; i++)
             reg[ro0] = (reg[ro0] << 8) | memoria[mar + i];
+        pc += 4;
     }
     else if(ir == 15) // STORE
     {
         for (int i = 0; i < 4; i++)
             memoria[mar + i] = (reg[ro0] << (24 - (8*i))) & 0b11111111; //------------------------------------------------------------//
+        pc += 4;
     }
     else if(ir == 16) // MOVE IMMEDIATE TO THE LOWER HALF OF THE REGISTER
     {
@@ -382,30 +567,37 @@ void Executa (void)
     else if(ir == 17) // MOVE IMMEDIATE TO THE HIGHER HALF OF THE REGISTER
     {
         reg[ro0] = ((imm & 0b1111111111111111) << 16) | (reg[ro0] & 0b1111111111111111); //------------------------------------------------------------//
+        pc += 4;
     }
     else if(ir == 18) // ADD IMMEDIATE
     {
         reg[ro0] = reg[ro0] + imm;
+        pc += 4;
     }
     else if(ir == 19) // SUBTRACT IMMEDIATE
     {
         reg[ro0] = reg[ro0] - imm;
+        pc += 4;
     }
     else if(ir == 20) // MULTIPLY IMMEDIATE
     {
         reg[ro0] = reg[ro0] * imm;
+        pc += 4;
     }
     else if(ir == 21) // DIVIDE IMMEDIATE
     {
         reg[ro0] = reg[ro0] / imm;
+        pc += 4;
     }
     else if(ir == 22) // LEFT SHIFT
     {
         reg[ro0] = reg[ro0] << imm;
+        pc += 4;
     }
     else if(ir == 23) // RIGHT SHIFT
     {
         reg[ro0] = reg[ro0] >> imm;
+        pc += 4;
     }
     else if(ir == 24) // JUMP IF EQUAL TO
     {
@@ -453,7 +645,4 @@ void Executa (void)
     {
         pc = mar;
     }
-
-    if (ir != 0) // Se a instrução for diferente de HALT.
-        pc = pc + 4;
 }
