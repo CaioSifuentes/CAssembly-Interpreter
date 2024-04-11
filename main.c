@@ -4,6 +4,15 @@
 #include <windows.h>
 #include "cpu.h"
 
+/*
+A função 'showDashboard' tem dois parâmetros de configuração:
+
+decOuHex: Você pode alterar entre 'h' ou 'd' para mudar a impressão dos valores para hexadecimal ou decimal, respectivamente.
+visibleRAM: Você pode alterar entre 0 ou 1 para definir se o programa irá imprimir a memória ou não; 0 => Falso, 1 => Verdadeiro.
+ */
+#define DEC_OU_HEXA 'h'
+#define VISIBLE_RAM 0
+
 int main(void)
 {
     SetConsoleOutputCP(CP_UTF8);
@@ -29,13 +38,7 @@ int main(void)
 
     
     while (1){
-        /*
-        A função 'showDashboard' tem dois parâmetros de configuração:
-
-        decOuHex: Você pode alterar entre 'h' ou 'd' para mudar a impressão dos valores para hexadecimal ou decimal, respectivamente.
-        visibleRAM: Você pode alterar entre 0 ou 1 para definir se o programa irá imprimir a memória ou não.
-        */
-        showDashboard('h', 0);
+        showDashboard(DEC_OU_HEXA, VISIBLE_RAM);
         Busca();
         Decodifica();
         Executa();
@@ -48,207 +51,6 @@ int main(void)
     
     return 0;
 }
-/*
-void lerArquivo(const char *Arquivo) {
-    FILE *arquivo = fopen(Arquivo, "r");
-    if (arquivo == NULL) {
-        perror("Não foi possível abrir o arquivo");
-        return;
-    }
-
-    char buffer[256];
-    while (fgets(buffer, sizeof(buffer), arquivo)) {
-        char instrucao[6];
-        char tipoInstrucao;
-        unsigned int endereco, ArmazenamentoResultado, valor1, valor2;
-
-        if (sscanf(buffer, "%x;%c;%s r%x, %x", &endereco, &tipoInstrucao, instrucao, &ArmazenamentoResultado, &valor1) == 5) {
-
-            if (strcmp(instrucao, "ld") == 0){
-                // instrução de Load
-
-              //  memoria[endereco++] = instrucao;
-              //  memoria[endereco++] = ArmazenamentoResultado;
-              //  memoria[endereco++] = valor1;
-
-            }else if (strcmp(instrucao, "st") == 0){
-                // instrução de store
-
-              //  memoria[endereco++] = instrucao;
-              //  memoria[endereco++] = ArmazenamentoResultado;
-              //  memoria[endereco++] = valor1;
-
-            }else if (strcmp(instrucao, "addi") == 0){
-                // instrução de addi
-
-              //  memoria[endereco++] = instrucao;
-              //  memoria[endereco++] = ArmazenamentoResultado;
-              // memoria[endereco++] = valor1;
-
-            }else if (strcmp(instrucao, "movil") == 0){
-                // instrução movil
-
-               // memoria[endereco++] = instrucao;
-               // memoria[endereco++] = ArmazenamentoResultado;
-               // memoria[endereco++] = valor1;
-
-            }else if (strcmp(instrucao, "movih") == 0){
-                // instrução movih
-
-               // memoria[endereco++] = instrucao;
-               // memoria[endereco++] = ArmazenamentoResultado;
-               // memoria[endereco++] = valor1;
-
-            }else if (strcmp(instrucao, "subi") == 0){
-                // instrução subi
-
-               // memoria[endereco++] = instrucao;
-               // memoria[endereco++] = ArmazenamentoResultado;
-               // memoria[endereco++] = valor1;
-
-            }else if (strcmp(instrucao, "muli") == 0){
-                // instrução muli
-
-               // memoria[endereco++] = instrucao;
-               // memoria[endereco++] = ArmazenamentoResultado;
-               // memoria[endereco++] = valor1;
-
-            }else if (strcmp(instrucao, "divi") == 0){
-                // instrução divi
-
-               // memoria[endereco++] = instrucao;
-               // memoria[endereco++] = ArmazenamentoResultado;
-               // memoria[endereco++] = valor1;
-
-            }else if (strcmp(instrucao, "lsh") == 0){
-                // instrução lsh
-
-               // memoria[endereco++] = instrucao;
-               // memoria[endereco++] = ArmazenamentoResultado;
-               // memoria[endereco++] = valor1;
-
-            }else if (strcmp(instrucao, "rsh") == 0){
-                // instrução rsh
-
-               // memoria[endereco++] = instrucao;
-               // memoria[endereco++] = ArmazenamentoResultado;
-               // memoria[endereco++] = valor1;
-
-            }else{
-               fprintf(stderr,"Instrução não existente!!");
-                return -1;
-            }
-
-        } else if (sscanf(buffer, "%x;%c;%s r%x, r%x, r%x", &endereco, &tipoInstrucao, instrucao, &ArmazenamentoResultado, &valor1, &valor2) == 6) {
-
-            if (strcmp(instrucao, "sub") == 0) {
-                //instrução sub
-
-            } else if (strcmp(instrucao, "div") == 0) {
-                //instrução div
-
-            }else if (strcmp(instrucao, "mul") == 0){
-                // instrução mul
-
-            }else if (strcmp(instrucao, "add") == 0){
-                // instrução add
-
-            }else if (strcmp(instrucao, "and") == 0){
-                // instrução and
-
-            }else if (strcmp(instrucao,"or") == 0){
-                // instrução or
-
-            }else if (strcmp(instrucao, "xor") == 0){
-                // instrução xor
-
-            }else{
-                fprintf(stderr,"Instrução não existente!!");
-                return -1;
-            }
-
-        } else if(sscanf(buffer, "%x;%c;%s", &endereco, &tipoInstrucao, instrucao) == 3){
-
-            if (strcmp(instrucao,"hlt") == 0){
-                 // instrução halt
-                return 0;
-            }else if(strcmp(instrucao,"nop") == 0){
-                // instrução nop
-
-            }else{
-                fprintf(stderr,"Instrução não existente!!");
-                return -1;
-            }
-
-        } else if(sscanf(buffer, "%x;%c;%x",&endereco, &tipoInstrucao, &valor1) == 3){
-               // operação/armazenamento de dados
-
-               memoria[endereco] = valor1;
-
-        } else if(sscanf(buffer, "%x;%c;%s r%x, r%x", &endereco, &tipoInstrucao, &instrucao, &valor1, &valor2) == 5){
-
-            if (strcmp(instrucao, "cmp") == 0){
-                // instrução cmp
-
-            }else if (strcmp(instrucao, "movr") == 0){
-                // instrução movr
-
-            }else{
-                fprintf(stderr,"Instrução não existente!!");
-                return -1;
-            }
-
-
-        } else if(sscanf(buffer, "%x;%c;%s %x", &endereco, &tipoInstrucao, &instrucao, &valor1) == 4){
-
-            if (strcmp(instrucao, "jle") == 0){
-                 // instrução jle
-
-            }else if (strcmp(instrucao, "je") == 0){
-                // instrução je
-
-            }else if (strcmp(instrucao, "jne") == 0){
-                // instrução jne
-
-            }else if (strcmp(instrucao, "jl") == 0){
-                // instrução jl
-
-            }else if (strcmp(instrucao, "jg") == 0){
-                // instrução jg
-
-            }else if (strcmp(instrucao, "jge") == 0){
-                // instrução jge
-
-            }else if (strcmp(instrucao, "jmp") == 0){
-                // instrução jmp
-
-            }else{
-                fprintf(stderr,"Instrução não existente!!");
-                return -1;
-            }
-        }else if(sscanf(buffer, "%x;%c;%s r%x, r%x, %x", &endereco, &tipoInstrucao, &instrucao, &ArmazenamentoResultado, &valor1, &valor2) == 6){
-            if (strcmp(instrucao, "ldbo") == 0){
-                //instrução ldbo
-            }else if (strcmp(instrucao, "stbo") == 0){
-                //instrução stbo
-            }else{
-                fprintf(stderr,"Instrução não existente!!");
-                return -1;
-            }
-
-
-
-        }else{
-
-
-        }
-
-        return 0;
-    }
-
-    fclose(arquivo);
-}
-*/
 
 int instructionToBinary(char instrucao[]){
 char instrucoes[31][10] = {"hlt", "nop", "not", "movr", "cmp", "ldbo", "stbo", "add", "sub", "mul", "div", "and", "or", "xor", "ld", "st", "movil", "movih", "addi", "subi", "muli", "divi", "lsh", "rsh", "je", "jne", "jl", "jle", "jg", "jge", "jmp"};
@@ -270,7 +72,7 @@ int lerArquivo(const char *Arquivo) {
     int linhaAtual = 1;
     while (fgets(buffer, sizeof(buffer), arquivo)) {
         unsigned int posMemoria; char tipoOperacao; char parsedBuffer[50];
-        unsigned char pag[4];
+        unsigned char pag[4]; unsigned int palavraCompleta;
         
         /*
         Remove o '\n' do buffer e muda para um '\0'.
@@ -295,7 +97,7 @@ int lerArquivo(const char *Arquivo) {
             Linha de Exemplo: ld r0, 86
 
             instrucao => String da instrução. (Exemplo: ld)
-            tipoOperacao => String com todos os parametros da instrução. (Exemplo: r0, 86)
+            parametros => String com todos os parametros da instrução. (Exemplo: r0, 86)
             */
             char instrucao[5], parametros[45]; unsigned int instrucaoBinario;
             sscanf(parsedBuffer, "%s %20[^\0]", instrucao, parametros);
@@ -315,7 +117,7 @@ int lerArquivo(const char *Arquivo) {
             Por fim, acumula tudo em uma única palavra de 32 bits na variavel 'palavraCompleta', conforme o formato da instrução.
             Exemplo: 0b01110000 00000000 00000000 10000110
             */
-            unsigned int r0, r1, r2, mar, imm, palavraCompleta;
+            unsigned int r0, r1, r2, mar, imm;
             if (instrucaoBinario == 0 || instrucaoBinario == 1);
             else if (instrucaoBinario >= 2 && instrucaoBinario <= 2)
             {
@@ -368,42 +170,28 @@ int lerArquivo(const char *Arquivo) {
                 printf("FALHA NA LEITURA DO CÓDIGO: INSTRUÇÃO NÃO ENCONTRADA. PRÓXIMO DA LINHA %d.", linhaAtual);
                 exit(1);
             }
-
-            /*
-            Armazena o valor em binário da palavra de 32 bits armazenada na variavel 'palavraCompleta' em "páginas" de 8 bits (char).
-            
-            Exemplo: 0b00101101 01010111 11111111 11111111
-            pag[0] => 0b00101101
-            pag[1] => 0b01010111
-            pag[2] => 0b11111111
-            pag[3] => 0b11111111
-            */
-            for (int i = 0; i < 4; i++)
-                pag[i] = (palavraCompleta >> (24 - (8*i))) & 0b11111111;
-
         }
         else if (tipoOperacao == 'd') // Se estivermos lidando com um dado...
         {
-            unsigned int valorDoDado;
-            sscanf(parsedBuffer, "%x", &valorDoDado);
-
-            /*
-            Armazena o valor em binário da palavra de 32 bits armazenada na variavel 'valorDoDado' em "páginas" de 8 bits (char).
-            
-            Exemplo: 0b00101010 11001000 11110100 10011000
-            pag[0] => 0b00101010
-            pag[1] => 0b11001000
-            pag[2] => 0b11110100
-            pag[3] => 0b10011000
-            */
-            for (int i = 0; i < 4; i++)
-                pag[i] = (valorDoDado >> (24 - (8*i))) & 0b11111111;
+            sscanf(parsedBuffer, "%x", &palavraCompleta);
         }
         else // Se o valor for diferente do esperado...
         {
             printf("FALHA NA LEITURA DO CÓDIGO: TIPO DE OPERAÇÃO NÃO ENCONTRADO. PRÓXIMO DA LINHA %d.", linhaAtual);
             exit(1);
         }
+
+        /*
+        Armazena o valor em binário da palavra de 32 bits armazenada na variavel 'palavraCompleta' em "páginas" de 8 bits (char).
+            
+        Exemplo: 0b00101101 01010111 11111111 11111111
+        pag[0] => 0b00101101
+        pag[1] => 0b01010111
+        pag[2] => 0b11111111
+        pag[3] => 0b11111111
+        */
+        for (int i = 0; i < 4; i++)
+            pag[i] = (palavraCompleta >> (24 - (8*i))) & 0b11111111;
 
         /*
         Adiciona as páginas na memória conforme o valor indicado na linha.
