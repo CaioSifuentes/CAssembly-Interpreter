@@ -5,28 +5,38 @@
 
 int main(void)
 {
-    lerArquivo("./operacao1.txt");
+    // NOTA: O arquivo 'operacao0.txt' não roda nada.
+    printf("Digite o nome do arquivo que você deseja executar (Exemplo: operacao1.txt):");
+    int retorno = 0;
+        while (retorno == 0){
+        char nomeArquivo[100];
+        printf("\n./codeFiles> ");
+        fgets(nomeArquivo, sizeof(nomeArquivo), stdin);
 
-    reg[0] = 3;
-    reg[1] = 8;
-    reg[2] = 2;
-    int memoriaInteiro = 0;
+        size_t len = strlen(nomeArquivo);
+        if (len > 0 && nomeArquivo[len - 1] == '\n')
+            nomeArquivo[len - 1] = '\0';
 
-    /*
+        char caminhoCompleto[100];
+        strcpy(caminhoCompleto, "./codeFiles/");
+        strcat(caminhoCompleto, nomeArquivo);
+
+        retorno = lerArquivo(caminhoCompleto);
+    }
+
+    
     while (1){
-        for (int i = 0; i < 4; i++) memoriaInteiro = (memoriaInteiro << 8) | memoria[4 + i];
-            printf("%d", memoriaInteiro);
         showDashboard();
         Busca();
         Decodifica();
         Executa();
 
-        printf("Pressione Enter para continuar...");
+        printf("Pressione qualquer tecla para iniciar o próximo ciclo de máquina ou aperte CTRL+C para finalizar a execução do trabalho.\n");
         fflush(stdout);
         while (getchar() != '\n');
-
     }
-    */
+    
+    
     return 0;
 }
 /*
@@ -240,11 +250,11 @@ char instrucoes[31][10] = {"hlt", "nop", "not", "movr", "cmp", "ldbo", "stbo", "
     return -1;
 }
 
-void lerArquivo(const char *Arquivo) {
+int lerArquivo(const char *Arquivo) {
     FILE *arquivo = fopen(Arquivo, "r");
     if (arquivo == NULL) {
         perror("Não foi possível abrir o arquivo");
-        return;
+        return 0;
     }
 
     char buffer[256];
@@ -297,7 +307,8 @@ void lerArquivo(const char *Arquivo) {
             Exemplo: 0b01110000 00000000 00000000 10000110
             */
             unsigned int r0, r1, r2, mar, imm, palavraCompleta;
-            if (instrucaoBinario == 2)
+            if (instrucaoBinario == 0 || instrucaoBinario == 1);
+            else if (instrucaoBinario >= 2 && instrucaoBinario <= 2)
             {
                 sscanf(parametros, "r%d", &r0);
                 palavraCompleta = (instrucaoBinario << 4) | r0;
@@ -393,6 +404,7 @@ void lerArquivo(const char *Arquivo) {
         linhaAtual++;
     }
     fclose(arquivo);
+    return 1;
 }
 
 void printBinario(int num) {
@@ -480,7 +492,8 @@ void Decodifica(void)
 
 void Executa (void)
 {
-    if (ir == 1) // NO OPERATION
+    if (ir == 0); // HALT
+    else if (ir == 1) // NO OPERATION
     {
         pc += 4;
     }

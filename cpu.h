@@ -21,4 +21,4 @@ void Executa (void); // Executa a instrução em IR, conforme os dados necessár
 void printBinario(int num); // DEBUG: Imprime uma variavel em seu valor binário.
 void showDashboard(); // Mostra na tela as variaveis de controle.
 
-void lerArquivo(const char *Arquivo); // Lê os arquivos e manda as instruções para a memoria
+int lerArquivo(const char *Arquivo); // Lê os arquivos e manda as instruções para a memoria
