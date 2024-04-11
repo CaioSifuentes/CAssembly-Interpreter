@@ -29,12 +29,11 @@ c;i;ld r3, 92
 96;d;3
 ```
 
-_NOTA: Todo programa deve começar na posição de memoria 0 e seguir sequêncialmente. As instruções devem vir primeiro que os dados._
-_NOTA²: As posições de memória devem ser colocadas em Hexadecimal. Os valores dos registradores e os valores de dados devem ser colocados em decimal._
+_NOTA: Todo programa deve começar na posição de memoria 0 e seguir sequêncialmente. As instruções devem vir primeiro que os dados. As posições de memória devem ser colocadas em Hexadecimal. Os valores dos registradores e os valores de dados devem ser colocados em decimal._
 
 2. Compile e execute o código em 'main.c'.
 
-3. Digite o nome do arquivo criado no terminal onde o código está sendo executado.
+3. Digite o nome do arquivo criado no terminal onde o código está sendo executado.  
 **Exemplo:**
 ```
 operacao1.txt
