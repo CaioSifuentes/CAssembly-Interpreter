@@ -214,6 +214,7 @@ void printBinario(int num) {
 
 void showDashboard(char decOuHex, int visibleRAM) {
     system("cls");
+    printf("(Configurações) Tipo de Dados: %c | Visibilidade de Memória: %d\n", decOuHex, visibleRAM);
     printf("======================================================================\n");
     printf("| MBR: "); printBinario(mbr); printf("|\n");
     if (decOuHex == 'd') // Parametro 'd' imrprime os valores em decimal.
@@ -227,8 +228,8 @@ void showDashboard(char decOuHex, int visibleRAM) {
             if (i % 2 == 1) printf("\n");
         }
         printf("-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-\n");
-        printf("| E: %d | L: %d | G: %d |\n", e, l, g);
-        printf("| PC: %u |\n", pc);
+        printf("| E: %d | L: %d | G: %d |", e, l, g);
+        printf(" PC: %u |\n", pc);
         if (visibleRAM){
             printf("-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-\n");
             printf("| Memória:\n");
@@ -250,8 +251,8 @@ void showDashboard(char decOuHex, int visibleRAM) {
             if (i % 2 == 1) printf("\n");
         }
         printf("-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-\n");
-        printf("| E: %x | L: %x | G: %x |\n", e, l, g);
-        printf("| PC: %x |\n", pc);
+        printf("| E: %x | L: %x | G: %x |", e, l, g);
+        printf(" PC: %x |\n", pc);
         if (visibleRAM){
             printf("-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-\n");
             printf("| Memória:\n");
