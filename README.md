@@ -8,7 +8,7 @@ Este é um simulador de uma Unidade de Processamento Central (CPU) básica desen
 **Cada instrução deve estar no formato:**
 ```endereço;instrução/dado;palavra de instrução/dado```
 
-**Exemplo:**
+**Exemplo:**  
 .\codeFiles\operacao1.txt
 ```
 0;i;ld r0, 86
@@ -34,7 +34,7 @@ _NOTA: Todo programa deve começar na posição de memoria 0 e seguir sequência
 2. Compile e execute o código em 'main.c'.
 
 3. Digite o nome do arquivo criado no terminal onde o código está sendo executado.  
-**Exemplo:**
+**Exemplo:**  
 ```
 operacao1.txt
 ```
@@ -50,7 +50,7 @@ operacao1.txt
 ## Autores
 
 ### Docentes:
-Este projeto é um trabalho de implementação da diciplina de Arquitetura e Organização de Computadores I para a turma de 2024/1.
+Este projeto é um trabalho de implementação da diciplina de Arquitetura e Organização de Computadores I para a turma de 2024/1.  
 Instituto Federal de Educação, Ciência e Tecnologia de Goiás - Campus Anápolis
 
 Plano de projeto planejado pelo docente [Hugo Vinícius Leão e Silva](https://www.escavador.com/sobre/5606654/hugo-vinicius-leao-e-silva).
