@@ -41,19 +41,39 @@ operacao1.txt
 
 ### Conjunto de Instruções possiveis
 
-| Mneônico | Instrução | Descrição                                      |
-|---------------|---------|------------------------------------------------|
-| hlt       | Halt | Não faz nada. O registrador PC também não é incrementado. Deve ser colocado no fim de todo programa.                  |
-| nop       | No Operation | Não faz nada. O registrador PC ainda é incrementado.                 |
-| not rX       | Logical-Not On Register | rX = !rX                 |
-| movr rX, rY | Move Register | rX = rY |
-| cmp rX, rY | Compare Register | 1. Se rX = rY, então E = 1; senão E = 0; <br> 2. Se rX < rY, então L = 1; senão L = 0; <br> 3. Se rX > rY, então G = 1; senão G = 0; |
-| ldbo rX, rY, M[Z] | Load Via Base + Offset | rX = M[Z + rY] |
-| stbo rX, rY, M[Z] | Store Via Base + Offset | M[Z + rY] = rX |
-|||
-|||
-|||
-|||
+|      Mneônico     |                     Instrução                     | Descrição                                                                                                                         |
+|-------------------|---------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
+| hlt               | Halt                                              | Não faz nada. O registrador PC também não é incrementado. Deve ser colocado no fim de todo programa.                              |
+| nop               | No Operation                                      | Não faz nada. O registrador PC ainda é incrementado.                                                                              |
+| not rX            | Logical-Not On Register                           | rX = !rX                                                                                                                          |
+| movr rX, rY       | Move Register                                     | rX = rY                                                                                                                           |
+| cmp rX, rY        | Compare Register                                  | 1. Se rX = rY, então E = 1; senão E = 0 <br> 2. Se rX < rY, então L = 1; senão L = 0 <br> 3. Se rX > rY, então G = 1; senão G = 0 |
+| ldbo rX, rY, M[Z] | Load Via Base + Offset                            | rX = M[Z + rY]           
+| stbo rX, rY, M[Z] | Store Via Base + Offset                           | M[Z + rY] = rX          
+| add rX, rY, rZ    | Add Register                                      | rX = rY + rZ
+| sub rX, rY, rZ    | Substract Register                                | rX = rY - rZ
+| mul rX, rY, rZ    | Multiply Register                                 | rX = rY * rZ
+| div rX, rY, rZ    | Divide Register                                   | rX = rY / rZ
+| and rX, rY, rZ    | Logical-And On Register                           | rX = rY & rZ
+| or rX, rY, rZ     | Logical-Or On Register                            | rX = rY | rZ
+| xor rX, rY, rZ    | Logical-Xor On Register                           | rX = rY ^ rZ
+| ld rX, M[Y]       | Load                                              | rX = M[Y]
+| st rX, M[Y]       | Store                                             | M[Y] = rX
+| movil rX, imm     | Move Immediate To The Lower Half Of The Register  | 
+| movih rX, imm     | Move Immediate To The Higher Half Of The Register |
+| addi rX, imm      | Add Immediate                                     |
+| subi rX, imm      | Substract Immediate                               |
+| muli rX, imm      | Multiply Immediate                                |
+| divi rX, imm      | Divide Immediate                                  |
+| lsh rX, imm       | Left Shift                                        |
+| rsh rX, imm       | Right Shift                                       |
+| je M[X]           | Jump If Equal To                                  |
+| jne M[X]          | Jump If Not Equal To                              |
+| jl M[X]           | Jump If Lower Than                                |
+| jle M[X]          | Jump If Lower Than Or Equal To                    |
+| jg M[X]           | Jump If Greater Than                              |
+| jge M[X]          | Jump If Greater Than Or Equal To                  |
+| jmp M[X]          | Jump                                              |
 
 ## Autores
 
