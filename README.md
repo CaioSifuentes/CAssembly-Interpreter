@@ -75,6 +75,14 @@ operacao1.txt
 | jge M[X]          | Jump If Greater Than Or Equal To                  | Se G = 1 && E = 1, então PC = X                                                                                                   |
 | jmp M[X]          | Jump                                              | PC = X                                                                                                                            |
 
+### Alterando o Código
+A função *'showDashboard'* tem dois parâmetros de configuração:
+
+**decOuHex:** Você pode alterar entre 'h' ou 'd' para mudar a impressão dos valores para hexadecimal ou decimal, respectivamente.
+**visibleRAM:** Você pode alterar entre 0 ou 1 para definir se o programa irá imprimir a memória ou não; 0 => Falso, 1 => Verdadeiro.
+
+Você pode alterar estes parâmetros das constantes definidas no início do código em 'main.c'.
+
 ## Autores
 
 ### Docentes:
