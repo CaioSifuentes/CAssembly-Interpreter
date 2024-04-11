@@ -359,16 +359,14 @@ void Executa (void)
     else if(ir == 5) // LOAD VIA BASE+OFFSET
     {
         reg[ro0] = 0;
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 4; i++)
             reg[ro0] |= (memoria[mar + ro1 + i] << (i * 8));
-        }
         pc += 4;
     }
     else if (ir == 6) // STORE VIA BASE+OFFSET
     {
-        for (int i = 0; i < 4; i++) {
-            memoria[mar + ro1 + i] = (reg[ro0] >> (i * 8)) & 0xFF;
-        }
+        for (int i = 0; i < 4; i++)
+            memoria[mar + ro1 + i] = (reg[ro0] >> (i * 8)) & 0b11111111;
         pc += 4;
     }
      else if(ir == 7){ // ADD REGISTER
@@ -412,7 +410,7 @@ void Executa (void)
     else if(ir == 15) // STORE
     {
         for (int i = 0; i < 4; i++)
-            memoria[mar + i] = (reg[ro0] << (24 - (8*i))) & 0b11111111; //------------------------------------------------------------//
+            memoria[mar + i] = (reg[ro0] << (24 - (8*i))) & 0b11111111;
         pc += 4;
     }
     else if(ir == 16) // MOVE IMMEDIATE TO THE LOWER HALF OF THE REGISTER
@@ -421,7 +419,7 @@ void Executa (void)
     }
     else if(ir == 17) // MOVE IMMEDIATE TO THE HIGHER HALF OF THE REGISTER
     {
-        reg[ro0] = ((imm & 0b1111111111111111) << 16) | (reg[ro0] & 0b1111111111111111); //------------------------------------------------------------//
+        reg[ro0] = ((imm & 0b1111111111111111) << 16) | (reg[ro0] & 0b1111111111111111);
         pc += 4;
     }
     else if(ir == 18) // ADD IMMEDIATE
@@ -457,7 +455,7 @@ void Executa (void)
     else if(ir == 24) // JUMP IF EQUAL TO
     {
         if(e == 1)
-            pc = mar; //----------------------------------------------------------------------------//
+            pc = mar;
         else
             pc += 4;
     }
@@ -492,7 +490,7 @@ void Executa (void)
     else if(ir == 29) // JUMP IF GREATER THAN OR EQUAL TO
     {
         if(e == 1 || g == 1)
-            pc = mar; //----------------------------------------------------------------------------//
+            pc = mar;
          else
             pc += 4;
     }
